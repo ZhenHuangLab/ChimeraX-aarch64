@@ -75,6 +75,10 @@ modules:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - -DBUILD_SHARED_LIBS=ON
       - -DSNAPPY_BUILD_TESTS=OFF
+      # On aarch64 GNUInstallDirs defaults CMAKE_INSTALL_LIBDIR to lib64, but the
+      # flatpak runtime only searches /app/lib, so Qt WebEngine fails to load
+      # with "libsnappy.so.1: cannot open shared object file".
+      - -DCMAKE_INSTALL_LIBDIR=lib
       #- -DCMAKE_INSTALL_PREFIX=/app
     sources:
       - type: git
@@ -86,6 +90,8 @@ modules:
     buildsystem: cmake-ninja
     config-opts:
       - -DBUILD_SHARED_LIBS=ON
+      # same lib64 vs lib issue as libsnappy above
+      - -DCMAKE_INSTALL_LIBDIR=lib
       - -DMZ_COMPAT=ON
       - -DMZ_ZLIB=ON
     sources:
